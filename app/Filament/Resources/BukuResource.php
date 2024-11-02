@@ -35,12 +35,7 @@ class BukuResource extends Resource
             ->columns([
                 ImageColumn::make('cover')
                     ->disk('local')
-                    ->visibility('private')
-                    ->action(function ($record) {
-                        return Action::make('previewImage')
-                            ->modalHeading('Pratinjau Gambar')
-                            ->modalContent(fn () => "<img src='".asset('storage/'.$record->cover)."' class='w-full h-auto' />");
-                    }),
+                    ->visibility('private'),
                 TextColumn::make('judul')->searchable()->sortable(),
                 TextColumn::make('penulis')->searchable()->sortable(),
                 TextColumn::make('penerbit')->searchable(),
