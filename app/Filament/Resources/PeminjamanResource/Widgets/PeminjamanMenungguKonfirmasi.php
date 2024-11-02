@@ -4,6 +4,7 @@ namespace App\Filament\Resources\PeminjamanResource\Widgets;
 
 use App\Models\Peminjaman;
 use App\Models\User;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -29,8 +30,10 @@ class PeminjamanMenungguKonfirmasi extends BaseWidget
                 TextColumn::make('buku.judul')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('tanggal_peminjaman')
-                    ->date(),
+                TextColumn::make('user.name')
+                    ->label('Oleh')
+                    ->sortable()
+                    ->searchable()
             ])
             ->filters([
                 //
@@ -59,8 +62,20 @@ class PeminjamanMenungguKonfirmasi extends BaseWidget
                                 ->send();
                             $recipient->notify(
                                 Notification::make()
-                                    ->title('Peminjaman buku telah disetujui oleh admin')
+                                    ->title('Peminjaman buku anda telah disetujui oleh admin')
+                                    ->success()
+                                    ->actions([
+                                        Action::make('markAsRead')
+                                            ->button()
+                                            ->markAsRead()
+                                    ])
                                     ->toDatabase()
+                            );
+                            $recipient->notify(
+                                Notification::make()
+                                    ->title('Peminjaman buku anda telah disetujui oleh admin')
+                                    ->success()
+                                    ->toBroadcast()
                             );
                         }),
                     \Filament\Tables\Actions\Action::make('batalkan')
@@ -88,11 +103,6 @@ class PeminjamanMenungguKonfirmasi extends BaseWidget
                                     ->toDatabase()
                             );
                         }),
-                ]),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
             ->emptyStateHeading('Data kosong');
