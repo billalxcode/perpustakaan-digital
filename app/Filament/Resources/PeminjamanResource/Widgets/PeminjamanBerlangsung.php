@@ -28,8 +28,10 @@ class PeminjamanBerlangsung extends BaseWidget
                 TextColumn::make('buku.judul')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('tanggal_peminjaman')
-                    ->date(),
+                TextColumn::make('user.name')
+                    ->label('Oleh')
+                    ->sortable()
+                    ->searchable()
             ])
             ->filters([
                 //
@@ -53,11 +55,6 @@ class PeminjamanBerlangsung extends BaseWidget
                             ->body('Buku berhasil dikembalikan, silahkan simpan buku ke tempat nya')
                             ->send();
                     }),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ])
             ->emptyStateHeading('Data kosong');
     }
