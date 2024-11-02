@@ -10,7 +10,9 @@ class DashboardBukuWidget extends BaseWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Total Buku', 0),
+            Stat::make('Tersedia', 100),
+            Stat::make('Buku Dipinjam', 0),
+            Stat::make('Buku Belum Dikembalikan', 0),
         ];
     }
 }
