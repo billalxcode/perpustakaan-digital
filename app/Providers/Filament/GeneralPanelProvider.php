@@ -25,7 +25,7 @@ class GeneralPanelProvider extends PanelProvider
     {
         return $panel
             ->id('general')
-            ->path('general')
+            ->path('')
             ->colors([
                 'primary' => Color::Amber,
             ])
