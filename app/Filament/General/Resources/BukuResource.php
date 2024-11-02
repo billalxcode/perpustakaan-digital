@@ -5,7 +5,9 @@ namespace App\Filament\General\Resources;
 use App\Filament\General\Resources\BukuResource\Pages;
 use App\Models\Buku;
 use App\Models\Peminjaman;
+use App\Models\User;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\ImageColumn;
@@ -72,8 +74,30 @@ class BukuResource extends Resource
 
                             Notification::make()
                                 ->success()
-                                ->body('Buku berhasil dipinjam')
+                                ->body('Silahkan tunggu petugas untuk mengkonfirmasi peminjaman buku anda')
                                 ->send();
+
+                            $users = User::role(['admin', 'officer'])->get();
+
+                            foreach ($users as $user) {
+                                $user->notify(
+                                    Notification::make()
+                                        ->info()
+                                        ->body('Ada peminjam yang butuh konfirmasi')
+                                        ->actions([
+                                            Action::make('markAsRead')
+                                                ->button()
+                                                ->markAsRead()
+                                        ])
+                                        ->toDatabase()
+                                );
+                                $user->notify(
+                                    Notification::make()
+                                        ->info()
+                                        ->body('Ada peminjam yang butuh konfirmasi')
+                                        ->toBroadcast()
+                                );
+                            }
                         })
                         ->modalIcon('heroicon-o-exclamation-triangle'),
                 ]),
