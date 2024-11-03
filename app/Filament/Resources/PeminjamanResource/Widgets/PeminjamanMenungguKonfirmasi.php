@@ -26,10 +26,14 @@ class PeminjamanMenungguKonfirmasi extends BaseWidget
                 ImageColumn::make('buku.cover')
                     ->disk('local')
                     ->visibility('private')
-                    ->label('Judul'),
+                    ->label('Cover'),
                 TextColumn::make('buku.judul')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Judul'),
+                TextColumn::make('tanggal_pengembalian')
+                    ->date()
+                    ->label('Rencana Pengembalian'),
                 TextColumn::make('user.name')
                     ->label('Oleh')
                     ->sortable()
@@ -98,9 +102,20 @@ class PeminjamanMenungguKonfirmasi extends BaseWidget
 
                             $recipient->notify(
                                 Notification::make()
+                                    ->title('Peminjaman buku anda telah dibatalkan oleh admin')
                                     ->danger()
-                                    ->title('Peminjaman buku telah dibatalkan oleh admin')
+                                    ->actions([
+                                        Action::make('markAsRead')
+                                            ->button()
+                                            ->markAsRead()
+                                    ])
                                     ->toDatabase()
+                            );
+                            $recipient->notify(
+                                Notification::make()
+                                    ->title('Peminjaman buku anda telah dibatalkan oleh admin')
+                                    ->danger()
+                                    ->toBroadcast()
                             );
                         }),
                 ]),
