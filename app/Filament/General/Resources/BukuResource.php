@@ -6,10 +6,12 @@ use App\Filament\General\Resources\BukuResource\Pages;
 use App\Models\Buku;
 use App\Models\Peminjaman;
 use App\Models\User;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Actions\Action;
 use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\MaxWidth;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\ActionsPosition;
@@ -61,14 +63,24 @@ class BukuResource extends Resource
                     \Filament\Tables\Actions\Action::make('pinjam')
                         ->label('Pinjam')
                         ->icon('heroicon-o-plus-circle')
+                        ->form([
+                            DatePicker::make('tanggal_pengembalian')
+                                ->date()
+                                ->native(false)
+                                ->minDate(now())
+                                ->maxDate(now()->addWeeks(2))
+                                ->required()
+                        ])
+                        ->modalWidth(MaxWidth::Small)
                         ->modalHeading('Pinjam Buku')
                         ->modalDescription('Dengan ini, kamu bertanggung jawab atas kerusakan atau kehilangan pada buku ini.')
                         ->color('warning')
-                        ->action(function ($record) use ($user) {
+                        ->action(function ($record, $data) use ($user) {
                             Peminjaman::create([
                                 'user_id' => $user->id,
                                 'buku_id' => $record->id,
                                 'tanggal_peminjaman' => now(),
+                                'tanggal_pengembalian' => $data['tanggal_pengembalian'],
                                 'status_peminjaman' => 'menunggu',
                             ]);
 
