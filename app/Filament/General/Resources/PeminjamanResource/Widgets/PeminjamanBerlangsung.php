@@ -28,12 +28,14 @@ class PeminjamanBerlangsung extends BaseWidget
                 ImageColumn::make('buku.cover')
                     ->disk('local')
                     ->visibility('private')
-                    ->label('Judul'),
-                TextColumn::make('buku.judul')
+                    ->label('Cover'),
+                    TextColumn::make('buku.judul')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->label('Judul'),
                 TextColumn::make('tanggal_peminjaman')
                     ->date(),
+                
             ])
             ->filters([
                 //
